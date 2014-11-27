@@ -1,7 +1,7 @@
 /**
  * Regexer: Plugin to validate form elements using regular expressions
  *
- * Version 0.4
+ * Version 0.5
  * 
  * @author Harish Chaudhari <contact@harishchaudhari.com>
  * http://harishchaudhari.com/
@@ -52,7 +52,7 @@
 		/**
 		 * Valdiation initiator
 		 * 
-		 * @since jquery-regexer 0.4
+		 * @since 0.5
 		 */
 		var rxformValidation = function() {
 			// For counting
@@ -110,7 +110,7 @@
 		 * @param rxRegexType 	Type of regex to use from list of available
 		 * @param rxIsNull 	If element needs to be allow null or not
 		 * 
-		 * @since jquery-regexer 0.4
+		 * @since 0.5
 		 */
 		var rxRegexValidator = function (rxElemID, rxValidationType, rxRegexType, rxIsNull) {
 			if( $(rxElemID).length > 0) {

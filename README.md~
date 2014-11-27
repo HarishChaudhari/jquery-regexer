@@ -1,0 +1,11 @@
+jquery-regexer
+==============
+
+Plugin to validate form elements using regular expressions
+
+Usage
+==============
+
+$(document).ready(function(){
+	$('#form').regexer();
+});
