@@ -17,11 +17,11 @@ You may wish to configure few variables like this
 
 ```javascript
 	$(document).ready(function(){
-        	$('#form').regexer({
+		$('#form').regexer({
 			reqFieldMsg: 		'This field is required',
 			incorrecFormatMsg: 	'Incorrect Format',
 			errAlertMsg:		'There are validation errors in this step.',
-			exclude:		'button, .dont-validate'
+			exclude:			'button, .dont-validate'
 		});
 	});
 ```
