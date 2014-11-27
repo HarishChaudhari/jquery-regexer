@@ -16,8 +16,7 @@ Register function on document ready
 ```
 
 Your form markup could be like this.
-Its not mandatory to have markup like this, but at least input tags should have a parent wrapper, say ```html<div>```.
-
+Its not mandatory to have markup like this, but at least input tags should have a parent wrapper, say ```<div>```.
 
 ```html
 	<form id="form" action="">
