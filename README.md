@@ -23,7 +23,7 @@ You may wish to configure few variables like this
 			errAlertMsg:		'There are validation errors in this step.',
 			exclude:		'button, .dont-validate'
 		});
-    	});
+	});
 ```
 
 Your form markup could be like this.
@@ -56,7 +56,7 @@ Those three data attributes are used for processing.
 
 Possible values: 'regex' or 'null'
 
-For required elements use 'regex' : Use of 'regex' allows ONLY appropriate value for element. Value cannot be blank
+For required elements use 'regex' : Use of 'regex' allows ONLY appropriate value for element. Value cannot be blank.
 For non-required elements use 'null' : Use of 'null' allows zero length value for element. Value can be blank.
 But value will be checked against regtype if isnull = 1 if value.length > 0
 
@@ -65,7 +65,8 @@ But value will be checked against regtype if isnull = 1 if value.length > 0
 Possible values: 'name', 'address', 'number', 'phone', 'zip', 'ssn', 'fssn', 'sssn', 'tssn', 'date', 'email'
 
 Please note that regular expression used in this script are following US standards of data structure.
-If this is used in conjuction with data-vtype 'null' & isnull = 1, then it will validate the value if it is filled with appropriate regtype provided.
+If this is used in conjuction with data-vtype 'null' & isnull = 1, then it will validate the value if
+it is filled with appropriate regtype provided.
 
 **data-isnull:** *Is Null*
 
