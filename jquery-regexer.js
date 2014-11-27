@@ -1,26 +1,28 @@
 /**
  * Regexer: Plugin to validate form elements using regular expressions
  *
+ * Version 0.4
+ * 
  * @author Harish Chaudhari <contact@harishchaudhari.com>
  * http://harishchaudhari.com/
  *
- * License GNU/GPL & MIT
+ * License GNU/GPL
  */
 
 (function($) {
 	/**
+	 * Register Main class for Regexer
 	 * 
 	 * @param string element a valid jQuery selector for the parent element of clones
 	 * @param object options options that can be passed to each instance
-	 * 
 	 */
 	var Regexer = function(element, options) {
 
-		// store jQuery object, just in case
+		// store jQuery object
 		var form = $(element);
 
-		// the default options
-		var defaults = {
+		// Default options
+		var rxDefaults = {
 			// Holds elements to be excluded from Vaildation
 			reqFieldMsg: 'This field is required',
 			incorrecFormatMsg: 'Incorrect Format',
@@ -28,17 +30,17 @@
 			exclude: ''
 		};
 
-		// merge the passed options object with defaults
-		var config = $.extend(defaults, options || {});
+		// merge user passed options object with rxDefaults
+		var rxConfig = $.extend(rxDefaults, options || {});
 
-		// getter function for options
+		// get rxConfig
 		this.getOption = function() {
-			return config;
+			return rxConfig;
 		};
 		
-		// setter function for options
-		this.setOption = function(lateoptions) {
-			$.extend(config, lateoptions || {});
+		// set rxConfig
+		this.setOption = function(postoptions) {
+			$.extend(rxConfig, postoptions || {});
 		};
 		
 		// Attach submit event to Form
@@ -48,8 +50,10 @@
 		});
 		
 		/**
-		  * Valdiation initiator
-		  */
+		 * Valdiation initiator
+		 * 
+		 * @since jquery-regexer 0.4
+		 */
 		var rxformValidation = function() {
 			// For counting
 			var i = 0;
@@ -57,15 +61,16 @@
 			// Array for holding success/failed  ( 'y' or 'f' )  responses
 			var rxErrFlag = new Array();
 			
-			// Run loop for each element in form exlcuding elements provided in config
-			form.find('input, textarea, select').not(config.exclude).not('input[type="submit"], input[type="button"]').each(function(){
+			// Run loop for each element in form exlcuding elements provided in rxConfig
+			form.find('input, textarea, select').not(rxConfig.exclude).not('input[type="submit"], input[type="button"]').each(function(){
 				// ID of element
 				var rxElemID = '#' + $(this).attr('id');
+				
 				// Valdiation Type
 				// Possible values: 'regex' or 'null'
-				// *** For required elements use 'regex' : Use of 'regex' allows ONLY appropriate value for element. Value cannot be blank ***
-				// *** For non-required elements use 'null' : Use of 'null' allows zero length value for element. Value can be blank. ***
-				// *** But value will be checked against regtype if isnull = 1 if value.length > 0 ***
+				// For required elements use 'regex' : Use of 'regex' allows ONLY appropriate value for element. Value cannot be blank
+				// For non-required elements use 'null' : Use of 'null' allows zero length value for element. Value can be blank.
+				// But value will be checked against regtype if isnull = 1 if value.length > 0
 				var rxValidationType = $(this).data('vtype');
 				
 				// Type of regex
@@ -80,26 +85,38 @@
 				// if 0, then, element must have some value
 				var rxIsNull = ($(this).data('isnull') == 1) ? 'allow_null' : 'not_null';
 				
-				rxErrFlag[i] = rxRegexValidator(rxElemID, rxValidationType, rxRegexType, rxIsNull ); i = i + 1;
+				// Okay, we got our variables set, now call the validator and get it done.
+				rxErrFlag[i] = rxRegexValidator(rxElemID, rxValidationType, rxRegexType, rxIsNull );
+				i = i + 1;
 			});
 			
-			// Failed, so stop JS from proceeding
 			if( $.inArray("f", rxErrFlag) !== -1 ) {
-				alert(config.errAlertMsg);
+				// Oh crap..it failed, now what stop JS from proceeding
+				alert(rxConfig.errAlertMsg);
 				return;
 			} else {
+				// Whoa, success :)
 				form.submit();
 			}
 		};
-		/* End of rxformValidation() */
+		/* End of function rxformValidation() */
 		
 		/**
 		 * Regular Expression Validator
+		 * Parameters passed are read from data attributes of form elements
+		 * 
+		 * @param rxElemID 	Currently processing element ID
+		 * @param rxValidation 	Type Type of valdiation you want to carry out
+		 * @param rxRegexType 	Type of regex to use from list of available
+		 * @param rxIsNull 	If element needs to be allow null or not
+		 * 
+		 * @since jquery-regexer 0.4
 		 */
 		var rxRegexValidator = function (rxElemID, rxValidationType, rxRegexType, rxIsNull) {
 			if( $(rxElemID).length > 0) {
 				var value = $(rxElemID).val();
 				
+				// For type null, most probably used in case of non-required elements
 				if( rxValidationType == 'null' ) {
 					// Fist check for NULL
 					switch( rxIsNull ) {
@@ -113,27 +130,32 @@
 							break;
 					}
 					$(rxElemID).parent().find('.rx-err-msg').remove();
-					if( !is_null && value.length == 0 ) {	// Failed
-						$(rxElemID).parent().append('<span class="rx-err-msg">'+config.reqFieldMsg+'</span>');
+					
+					if( !is_null && value.length == 0 ) {
+						// Failed
+						$(rxElemID).parent().append('<span class="rx-err-msg">'+rxConfig.reqFieldMsg+'</span>');
 						$(rxElemID).addClass('error').addClass('rx-error-border');
 						return 'f';
-					} else if( !is_null && value.length > 0 ) {	// Success for not_null elements
+					} else if( !is_null && value.length > 0 ) {
+						// Success for not_null elements
 						$(rxElemID).parent().find('.rx-err-msg').remove();
 						$(rxElemID).removeClass('error').removeClass('rx-error-border');
 						return 'y';
-					} else if( is_null && value.length == 0 ) {	// Success for allow_null elements
+					} else if( is_null && value.length == 0 ) {
+						// Success for allow_null elements
 						$(rxElemID).parent().find('.rx-err-msg').remove();
 						$(rxElemID).removeClass('error').removeClass('rx-error-border');
 						return 'y';
 					}
 				}
 				
+				// Run this for both validation types,
+				// as null needs to be checked against its associated regex type
 				if( (rxValidationType == 'regex' || rxValidationType == 'null') ) {
-					// RegEx will not be validated for elements allowing NULL(not required)
-					// Select the RegEx
+					// RegEx will not be validated for elements allowing NULL(not required) which should have data-regtype = 'null'
+					// Select the Regex Type
 					switch( rxRegexType ) {
 						case 'name':
-							//var reg = /^[a-zA-Z]+$/;
 							var reg = /^([a-zA-Z \-.\'.\_]+)$/;
 							break;
 						case 'address':
@@ -177,9 +199,9 @@
 						if (!reg.test(value)) {
 							// failed
 							if( value.length == 0 ) {
-								$(rxElemID).parent().append('<span class="rx-err-msg">'+config.reqFieldMsg+'</span>');
+								$(rxElemID).parent().append('<span class="rx-err-msg">'+rxConfig.reqFieldMsg+'</span>');
 							} else {
-								$(rxElemID).parent().append('<span class="rx-err-msg">'+config.incorrecFormatMsg+'</span>');
+								$(rxElemID).parent().append('<span class="rx-err-msg">'+rxConfig.incorrecFormatMsg+'</span>');
 							}
 							$(rxElemID).addClass('error').addClass('rx-error-border');
 							return 'f';
@@ -196,19 +218,19 @@
 	};
 	
 	// Add the Regexer to the global object
-    $.fn.regexer = function(options) {
-        return this.each(function() {
-            var element = $(this);
-
-            // Return early if this element already has a plugin instance
-            if (element.data('regexer'))
-                return;
-
-            // pass options to plugin constructor and create a new instance
-            var regexer = new Regexer(this, options);
-
-            // Store plugin object in this element's data
-            element.data('regexer', regexer);
-        });
-    };
+	$.fn.regexer = function(options) {
+		return this.each(function() {
+			var element = $(this);
+			
+			// Return if plugin is already attached
+			if (element.data('regexer'))
+				return;
+			
+			// pass options to plugin constructor and create a new instance
+			var regexer = new Regexer(this, options);
+			
+			// Store plugin object in this element's data
+			element.data('regexer', regexer);
+		});
+	};
 })(jQuery);
